@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_noteman" default="compile.module.noteman">
+    <dirname property="module.noteman.basedir" file="${ant.file.module_noteman}" />
+
+    <property name="module.jdk.home.noteman" value="${project.jdk.home}" />
+    <property name="module.jdk.bin.noteman" value="${project.jdk.bin}" />
+    <property name="module.jdk.classpath.noteman" value="${project.jdk.classpath}" />
+
+    <property name="compiler.args.noteman"
+        value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}" />
+
+    <property name="noteman.output.dir"
+        value="${module.noteman.basedir}/classes/production/noteman" />
+    <property name="noteman.testoutput.dir"
+        value="${module.noteman.basedir}/classes/test/noteman" />
+
+    <path id="noteman.module.bootclasspath">
+        <!-- Paths to be included in compilation bootclasspath -->
+    </path>
+
+    <path id="noteman.module.production.classpath">
+        <path refid="${module.jdk.classpath.noteman}" />
+    </path>
+
+    <path id="noteman.runtime.production.module.classpath">
+        <pathelement location="${noteman.output.dir}" />
+    </path>
+
+    <path id="noteman.module.classpath">
+        <path refid="${module.jdk.classpath.noteman}" />
+        <pathelement location="${noteman.output.dir}" />
+    </path>
+
+    <path id="noteman.runtime.module.classpath">
+        <pathelement location="${noteman.testoutput.dir}" />
+        <pathelement location="${noteman.output.dir}" />
+    </path>
+
+
+    <patternset id="excluded.from.module.noteman">
+        <patternset refid="ignored.files" />
+    </patternset>
+
+    <patternset id="excluded.from.compilation.noteman">
+        <patternset refid="excluded.from.module.noteman" />
+    </patternset>
+
+
+    <target name="compile.module.noteman"
+        depends="compile.module.noteman.production,compile.module.noteman.tests"
+        description="Compile module noteman" />
+
+    <target name="compile.module.noteman.production" depends="register.custom.compilers"
+        description="Compile module noteman; production classes" />
+
+    <target name="compile.module.noteman.tests"
+        depends="register.custom.compilers,compile.module.noteman.production"
+        description="compile module noteman; test classes" unless="skip.tests" />
+
+    <target name="clean.module.noteman" description="cleanup module">
+        <delete dir="${noteman.output.dir}" />
+        <delete dir="${noteman.testoutput.dir}" />
+    </target>
+</project>
